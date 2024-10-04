@@ -1,4 +1,4 @@
-<div align="center"
+<div align="center">
 
 # Invoke WD14 Tagger
 
@@ -52,4 +52,4 @@ Prompt:
 
 ## Acknowledgement
 - [@Akegarasu](https://github.com/Akegarasu) - Provide Tagger source code.
-- [#SmilingWolf](https://huggingface.co/SmilingWolf) - Provide Tagger model.
+- [@SmilingWolf](https://huggingface.co/SmilingWolf) - Provide Tagger model.

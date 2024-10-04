@@ -37,7 +37,7 @@ git clone https://github.com/licyk/invoke_wd14_tagger
 ## 使用
 进入 InvokeAI 的工作流中，在添加节点处搜索`WD1.4 Tagger`节点并添加。
 
-在`invoke_wd14_tagger/workflow`中可有示例工作流，可导入并使用。
+在`invoke_wd14_tagger/workflow`中有示例工作流，可导入并使用。
 
 在运行工作流时，可从终端查看反推的提示词，例如。
 
@@ -52,4 +52,4 @@ Prompt:
 
 ## 鸣谢
 - [@Akegarasu](https://github.com/Akegarasu) - 提供 Tagger 源码。
-- [#SmilingWolf](https://huggingface.co/SmilingWolf) - 提供 Tagger 模型。
+- [@SmilingWolf](https://huggingface.co/SmilingWolf) - 提供 Tagger 模型。
