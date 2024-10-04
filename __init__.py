@@ -1,0 +1,1 @@
+from .node import WD14_TAGGER # noqa F401

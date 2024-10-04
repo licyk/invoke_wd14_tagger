@@ -1,0 +1,719 @@
+{
+  "name": "wd1.4_tagger_example",
+  "author": "licyk",
+  "description": "An example using wd1.4 tagger to get prompt from image.",
+  "version": "",
+  "contact": "",
+  "tags": "wd1.4 tagger",
+  "notes": "",
+  "exposedFields": [
+    {
+      "nodeId": "5b5ae377-a738-4a46-a16b-d4c22d5abe69",
+      "fieldName": "interrogator"
+    },
+    {
+      "nodeId": "5b5ae377-a738-4a46-a16b-d4c22d5abe69",
+      "fieldName": "threshold"
+    },
+    {
+      "nodeId": "63484364-62ed-4f79-a153-cd032a3a57c0",
+      "fieldName": "value"
+    },
+    {
+      "nodeId": "1120d3bb-942f-49f4-b026-0eda8871b165",
+      "fieldName": "width"
+    },
+    {
+      "nodeId": "1120d3bb-942f-49f4-b026-0eda8871b165",
+      "fieldName": "height"
+    },
+    {
+      "nodeId": "3010e101-a773-483c-8988-8acfb6998b27",
+      "fieldName": "scheduler"
+    },
+    {
+      "nodeId": "3010e101-a773-483c-8988-8acfb6998b27",
+      "fieldName": "steps"
+    },
+    {
+      "nodeId": "3010e101-a773-483c-8988-8acfb6998b27",
+      "fieldName": "cfg_scale"
+    }
+  ],
+  "meta": {
+    "version": "3.0.0",
+    "category": "user"
+  },
+  "id": "efeea581-e4a1-4402-a8c0-2046df6d918b",
+  "nodes": [
+    {
+      "id": "5b5ae377-a738-4a46-a16b-d4c22d5abe69",
+      "type": "invocation",
+      "data": {
+        "id": "5b5ae377-a738-4a46-a16b-d4c22d5abe69",
+        "type": "wd1.4_tagger",
+        "version": "1.0.0",
+        "label": "",
+        "notes": "",
+        "isOpen": true,
+        "isIntermediate": true,
+        "useCache": false,
+        "nodePack": "invoke_wd14_tagger",
+        "inputs": {
+          "image": {
+            "name": "image",
+            "label": "",
+            "value": {
+              "image_name": "2baa3d7f-05ea-42ab-a1d3-380268fa951d.png"
+            }
+          },
+          "interrogator": {
+            "name": "interrogator",
+            "label": "",
+            "value": "wd-eva02-large-tagger-v3"
+          },
+          "threshold": {
+            "name": "threshold",
+            "label": "",
+            "value": 0.35
+          },
+          "additional_tags": {
+            "name": "additional_tags",
+            "label": "",
+            "value": ""
+          },
+          "exclude_tags": {
+            "name": "exclude_tags",
+            "label": "",
+            "value": ""
+          },
+          "replace_underscore": {
+            "name": "replace_underscore",
+            "label": "",
+            "value": "ON"
+          },
+          "replace_underscore_excludes": {
+            "name": "replace_underscore_excludes",
+            "label": "",
+            "value": "0_0, (o)_(o), +_+, +_-, ._., <o>_<o>, <|>_<|>, =_=, >_<, 3_3, 6_9, >_o, @_@, ^_^, o_o, u_u, x_x, |_|, ||_||"
+          },
+          "escape_tag": {
+            "name": "escape_tag",
+            "label": "",
+            "value": "ON"
+          },
+          "unload_model_after_running": {
+            "name": "unload_model_after_running",
+            "label": "",
+            "value": "ON"
+          }
+        }
+      },
+      "position": {
+        "x": 245.18016745569884,
+        "y": 188.590843887055
+      }
+    },
+    {
+      "id": "f2e16c33-2a58-41bd-8aac-6f8a47e59927",
+      "type": "invocation",
+      "data": {
+        "id": "f2e16c33-2a58-41bd-8aac-6f8a47e59927",
+        "type": "l2i",
+        "version": "1.3.0",
+        "label": "",
+        "notes": "",
+        "isOpen": true,
+        "isIntermediate": false,
+        "useCache": true,
+        "nodePack": "invokeai",
+        "inputs": {
+          "board": {
+            "name": "board",
+            "label": ""
+          },
+          "metadata": {
+            "name": "metadata",
+            "label": ""
+          },
+          "latents": {
+            "name": "latents",
+            "label": ""
+          },
+          "vae": {
+            "name": "vae",
+            "label": ""
+          },
+          "tiled": {
+            "name": "tiled",
+            "label": "",
+            "value": false
+          },
+          "tile_size": {
+            "name": "tile_size",
+            "label": "",
+            "value": 0
+          },
+          "fp32": {
+            "name": "fp32",
+            "label": "",
+            "value": false
+          }
+        }
+      },
+      "position": {
+        "x": 1845.4349086426841,
+        "y": 185.49351343841556
+      }
+    },
+    {
+      "id": "1120d3bb-942f-49f4-b026-0eda8871b165",
+      "type": "invocation",
+      "data": {
+        "id": "1120d3bb-942f-49f4-b026-0eda8871b165",
+        "type": "noise",
+        "version": "1.0.2",
+        "label": "",
+        "notes": "",
+        "isOpen": true,
+        "isIntermediate": true,
+        "useCache": true,
+        "nodePack": "invokeai",
+        "inputs": {
+          "seed": {
+            "name": "seed",
+            "label": "",
+            "value": 0
+          },
+          "width": {
+            "name": "width",
+            "label": "Width",
+            "value": 1344
+          },
+          "height": {
+            "name": "height",
+            "label": "",
+            "value": 1008
+          },
+          "use_cpu": {
+            "name": "use_cpu",
+            "label": "",
+            "value": false
+          }
+        }
+      },
+      "position": {
+        "x": 655.5712173310628,
+        "y": 1057.7614470500469
+      }
+    },
+    {
+      "id": "74032837-189b-40fa-83ab-642c51c61c2e",
+      "type": "invocation",
+      "data": {
+        "id": "74032837-189b-40fa-83ab-642c51c61c2e",
+        "type": "sdxl_compel_prompt",
+        "version": "1.2.0",
+        "label": "",
+        "notes": "",
+        "isOpen": true,
+        "isIntermediate": true,
+        "useCache": true,
+        "nodePack": "invokeai",
+        "inputs": {
+          "prompt": {
+            "name": "prompt",
+            "label": "",
+            "value": ""
+          },
+          "style": {
+            "name": "style",
+            "label": "",
+            "value": ""
+          },
+          "original_width": {
+            "name": "original_width",
+            "label": "",
+            "value": 1024
+          },
+          "original_height": {
+            "name": "original_height",
+            "label": "",
+            "value": 1024
+          },
+          "crop_top": {
+            "name": "crop_top",
+            "label": "",
+            "value": 0
+          },
+          "crop_left": {
+            "name": "crop_left",
+            "label": "",
+            "value": 0
+          },
+          "target_width": {
+            "name": "target_width",
+            "label": "",
+            "value": 1024
+          },
+          "target_height": {
+            "name": "target_height",
+            "label": "",
+            "value": 1024
+          },
+          "clip": {
+            "name": "clip",
+            "label": ""
+          },
+          "clip2": {
+            "name": "clip2",
+            "label": ""
+          },
+          "mask": {
+            "name": "mask",
+            "label": ""
+          }
+        }
+      },
+      "position": {
+        "x": 1042.788159967948,
+        "y": 181.7701493713854
+      }
+    },
+    {
+      "id": "e251ab34-80da-4d03-b389-db1e6a29fdbc",
+      "type": "invocation",
+      "data": {
+        "id": "e251ab34-80da-4d03-b389-db1e6a29fdbc",
+        "type": "sdxl_compel_prompt",
+        "version": "1.2.0",
+        "label": "",
+        "notes": "",
+        "isOpen": true,
+        "isIntermediate": true,
+        "useCache": true,
+        "nodePack": "invokeai",
+        "inputs": {
+          "prompt": {
+            "name": "prompt",
+            "label": "",
+            "value": ""
+          },
+          "style": {
+            "name": "style",
+            "label": "",
+            "value": ""
+          },
+          "original_width": {
+            "name": "original_width",
+            "label": "",
+            "value": 1024
+          },
+          "original_height": {
+            "name": "original_height",
+            "label": "",
+            "value": 1024
+          },
+          "crop_top": {
+            "name": "crop_top",
+            "label": "",
+            "value": 0
+          },
+          "crop_left": {
+            "name": "crop_left",
+            "label": "",
+            "value": 0
+          },
+          "target_width": {
+            "name": "target_width",
+            "label": "",
+            "value": 1024
+          },
+          "target_height": {
+            "name": "target_height",
+            "label": "",
+            "value": 1024
+          },
+          "clip": {
+            "name": "clip",
+            "label": ""
+          },
+          "clip2": {
+            "name": "clip2",
+            "label": ""
+          },
+          "mask": {
+            "name": "mask",
+            "label": ""
+          }
+        }
+      },
+      "position": {
+        "x": 1042.6086022620639,
+        "y": 708.4369605977807
+      }
+    },
+    {
+      "id": "63484364-62ed-4f79-a153-cd032a3a57c0",
+      "type": "invocation",
+      "data": {
+        "id": "63484364-62ed-4f79-a153-cd032a3a57c0",
+        "type": "string",
+        "version": "1.0.1",
+        "label": "String Primitive",
+        "notes": "",
+        "isOpen": true,
+        "isIntermediate": true,
+        "useCache": true,
+        "nodePack": "invokeai",
+        "inputs": {
+          "value": {
+            "name": "value",
+            "label": "Negative Prompt",
+            "value": "low quality,worst quality,normal quality,text,signature,jpeg artifacts,bad anatomy,old,early,copyright name,watermark,artist name,signature,\n"
+          }
+        }
+      },
+      "position": {
+        "x": 653.8265802986682,
+        "y": 808.7922555553967
+      }
+    },
+    {
+      "id": "3010e101-a773-483c-8988-8acfb6998b27",
+      "type": "invocation",
+      "data": {
+        "id": "3010e101-a773-483c-8988-8acfb6998b27",
+        "type": "denoise_latents",
+        "version": "1.5.3",
+        "label": "",
+        "notes": "",
+        "isOpen": true,
+        "isIntermediate": true,
+        "useCache": true,
+        "nodePack": "invokeai",
+        "inputs": {
+          "positive_conditioning": {
+            "name": "positive_conditioning",
+            "label": "Positive Conditioning"
+          },
+          "negative_conditioning": {
+            "name": "negative_conditioning",
+            "label": ""
+          },
+          "noise": {
+            "name": "noise",
+            "label": ""
+          },
+          "steps": {
+            "name": "steps",
+            "label": "",
+            "value": 20
+          },
+          "cfg_scale": {
+            "name": "cfg_scale",
+            "label": "",
+            "value": 5
+          },
+          "denoising_start": {
+            "name": "denoising_start",
+            "label": "",
+            "value": 0
+          },
+          "denoising_end": {
+            "name": "denoising_end",
+            "label": "",
+            "value": 1
+          },
+          "scheduler": {
+            "name": "scheduler",
+            "label": "",
+            "value": "dpmpp_2m_sde_k"
+          },
+          "unet": {
+            "name": "unet",
+            "label": ""
+          },
+          "control": {
+            "name": "control",
+            "label": ""
+          },
+          "ip_adapter": {
+            "name": "ip_adapter",
+            "label": ""
+          },
+          "t2i_adapter": {
+            "name": "t2i_adapter",
+            "label": ""
+          },
+          "cfg_rescale_multiplier": {
+            "name": "cfg_rescale_multiplier",
+            "label": "",
+            "value": 0
+          },
+          "latents": {
+            "name": "latents",
+            "label": ""
+          },
+          "denoise_mask": {
+            "name": "denoise_mask",
+            "label": ""
+          }
+        }
+      },
+      "position": {
+        "x": 1446.215038112342,
+        "y": 185.5002760316089
+      }
+    },
+    {
+      "id": "acd6c5a5-d28a-4ee9-a46c-545b52fbe6f2",
+      "type": "invocation",
+      "data": {
+        "id": "acd6c5a5-d28a-4ee9-a46c-545b52fbe6f2",
+        "type": "sdxl_model_loader",
+        "version": "1.0.3",
+        "label": "",
+        "notes": "",
+        "isOpen": true,
+        "isIntermediate": true,
+        "useCache": true,
+        "nodePack": "invokeai",
+        "inputs": {
+          "model": {
+            "name": "model",
+            "label": "",
+            "value": {
+              "key": "8f1e23bf-b9d0-4287-88f7-4c70f84507de",
+              "hash": "blake3:ef3a6dd9c8a71e07d77ce8e84780524357e629ee8750eb3018aed648d4c803f1",
+              "name": "Illustrious-XL-v0.1",
+              "base": "sdxl",
+              "type": "main"
+            }
+          }
+        }
+      },
+      "position": {
+        "x": 646.3178657302977,
+        "y": 398.31740075504274
+      }
+    },
+    {
+      "id": "a4af367a-7a16-42a4-8782-f8d39d3b1317",
+      "type": "invocation",
+      "data": {
+        "id": "a4af367a-7a16-42a4-8782-f8d39d3b1317",
+        "type": "rand_int",
+        "version": "1.0.1",
+        "label": "",
+        "notes": "",
+        "isOpen": true,
+        "isIntermediate": true,
+        "useCache": false,
+        "nodePack": "invokeai",
+        "inputs": {
+          "low": {
+            "name": "low",
+            "label": "",
+            "value": 0
+          },
+          "high": {
+            "name": "high",
+            "label": "",
+            "value": 2147483647
+          }
+        }
+      },
+      "position": {
+        "x": 251.6630074792448,
+        "y": 1214.5330534633974
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "reactflow__edge-1120d3bb-942f-49f4-b026-0eda8871b165height-74032837-189b-40fa-83ab-642c51c61c2eoriginal_height",
+      "type": "default",
+      "source": "1120d3bb-942f-49f4-b026-0eda8871b165",
+      "target": "74032837-189b-40fa-83ab-642c51c61c2e",
+      "sourceHandle": "height",
+      "targetHandle": "original_height"
+    },
+    {
+      "id": "reactflow__edge-1120d3bb-942f-49f4-b026-0eda8871b165height-74032837-189b-40fa-83ab-642c51c61c2etarget_height",
+      "type": "default",
+      "source": "1120d3bb-942f-49f4-b026-0eda8871b165",
+      "target": "74032837-189b-40fa-83ab-642c51c61c2e",
+      "sourceHandle": "height",
+      "targetHandle": "target_height"
+    },
+    {
+      "id": "reactflow__edge-1120d3bb-942f-49f4-b026-0eda8871b165width-74032837-189b-40fa-83ab-642c51c61c2etarget_width",
+      "type": "default",
+      "source": "1120d3bb-942f-49f4-b026-0eda8871b165",
+      "target": "74032837-189b-40fa-83ab-642c51c61c2e",
+      "sourceHandle": "width",
+      "targetHandle": "target_width"
+    },
+    {
+      "id": "reactflow__edge-1120d3bb-942f-49f4-b026-0eda8871b165width-74032837-189b-40fa-83ab-642c51c61c2eoriginal_width",
+      "type": "default",
+      "source": "1120d3bb-942f-49f4-b026-0eda8871b165",
+      "target": "74032837-189b-40fa-83ab-642c51c61c2e",
+      "sourceHandle": "width",
+      "targetHandle": "original_width"
+    },
+    {
+      "id": "reactflow__edge-1120d3bb-942f-49f4-b026-0eda8871b165height-e251ab34-80da-4d03-b389-db1e6a29fdbcoriginal_height",
+      "type": "default",
+      "source": "1120d3bb-942f-49f4-b026-0eda8871b165",
+      "target": "e251ab34-80da-4d03-b389-db1e6a29fdbc",
+      "sourceHandle": "height",
+      "targetHandle": "original_height"
+    },
+    {
+      "id": "reactflow__edge-1120d3bb-942f-49f4-b026-0eda8871b165height-e251ab34-80da-4d03-b389-db1e6a29fdbctarget_height",
+      "type": "default",
+      "source": "1120d3bb-942f-49f4-b026-0eda8871b165",
+      "target": "e251ab34-80da-4d03-b389-db1e6a29fdbc",
+      "sourceHandle": "height",
+      "targetHandle": "target_height"
+    },
+    {
+      "id": "reactflow__edge-1120d3bb-942f-49f4-b026-0eda8871b165width-e251ab34-80da-4d03-b389-db1e6a29fdbctarget_width",
+      "type": "default",
+      "source": "1120d3bb-942f-49f4-b026-0eda8871b165",
+      "target": "e251ab34-80da-4d03-b389-db1e6a29fdbc",
+      "sourceHandle": "width",
+      "targetHandle": "target_width"
+    },
+    {
+      "id": "reactflow__edge-1120d3bb-942f-49f4-b026-0eda8871b165width-e251ab34-80da-4d03-b389-db1e6a29fdbcoriginal_width",
+      "type": "default",
+      "source": "1120d3bb-942f-49f4-b026-0eda8871b165",
+      "target": "e251ab34-80da-4d03-b389-db1e6a29fdbc",
+      "sourceHandle": "width",
+      "targetHandle": "original_width"
+    },
+    {
+      "id": "reactflow__edge-3010e101-a773-483c-8988-8acfb6998b27latents-f2e16c33-2a58-41bd-8aac-6f8a47e59927latents",
+      "type": "default",
+      "source": "3010e101-a773-483c-8988-8acfb6998b27",
+      "target": "f2e16c33-2a58-41bd-8aac-6f8a47e59927",
+      "sourceHandle": "latents",
+      "targetHandle": "latents"
+    },
+    {
+      "id": "reactflow__edge-acd6c5a5-d28a-4ee9-a46c-545b52fbe6f2vae-f2e16c33-2a58-41bd-8aac-6f8a47e59927vae",
+      "type": "default",
+      "source": "acd6c5a5-d28a-4ee9-a46c-545b52fbe6f2",
+      "target": "f2e16c33-2a58-41bd-8aac-6f8a47e59927",
+      "sourceHandle": "vae",
+      "targetHandle": "vae"
+    },
+    {
+      "id": "reactflow__edge-acd6c5a5-d28a-4ee9-a46c-545b52fbe6f2unet-3010e101-a773-483c-8988-8acfb6998b27unet",
+      "type": "default",
+      "source": "acd6c5a5-d28a-4ee9-a46c-545b52fbe6f2",
+      "target": "3010e101-a773-483c-8988-8acfb6998b27",
+      "sourceHandle": "unet",
+      "targetHandle": "unet"
+    },
+    {
+      "id": "reactflow__edge-acd6c5a5-d28a-4ee9-a46c-545b52fbe6f2clip2-e251ab34-80da-4d03-b389-db1e6a29fdbcclip2",
+      "type": "default",
+      "source": "acd6c5a5-d28a-4ee9-a46c-545b52fbe6f2",
+      "target": "e251ab34-80da-4d03-b389-db1e6a29fdbc",
+      "sourceHandle": "clip2",
+      "targetHandle": "clip2"
+    },
+    {
+      "id": "reactflow__edge-acd6c5a5-d28a-4ee9-a46c-545b52fbe6f2clip-e251ab34-80da-4d03-b389-db1e6a29fdbcclip",
+      "type": "default",
+      "source": "acd6c5a5-d28a-4ee9-a46c-545b52fbe6f2",
+      "target": "e251ab34-80da-4d03-b389-db1e6a29fdbc",
+      "sourceHandle": "clip",
+      "targetHandle": "clip"
+    },
+    {
+      "id": "reactflow__edge-a4af367a-7a16-42a4-8782-f8d39d3b1317value-1120d3bb-942f-49f4-b026-0eda8871b165seed",
+      "type": "default",
+      "source": "a4af367a-7a16-42a4-8782-f8d39d3b1317",
+      "target": "1120d3bb-942f-49f4-b026-0eda8871b165",
+      "sourceHandle": "value",
+      "targetHandle": "seed"
+    },
+    {
+      "id": "reactflow__edge-1120d3bb-942f-49f4-b026-0eda8871b165noise-3010e101-a773-483c-8988-8acfb6998b27noise",
+      "type": "default",
+      "source": "1120d3bb-942f-49f4-b026-0eda8871b165",
+      "target": "3010e101-a773-483c-8988-8acfb6998b27",
+      "sourceHandle": "noise",
+      "targetHandle": "noise"
+    },
+    {
+      "id": "reactflow__edge-e251ab34-80da-4d03-b389-db1e6a29fdbcconditioning-3010e101-a773-483c-8988-8acfb6998b27negative_conditioning",
+      "type": "default",
+      "source": "e251ab34-80da-4d03-b389-db1e6a29fdbc",
+      "target": "3010e101-a773-483c-8988-8acfb6998b27",
+      "sourceHandle": "conditioning",
+      "targetHandle": "negative_conditioning"
+    },
+    {
+      "id": "reactflow__edge-63484364-62ed-4f79-a153-cd032a3a57c0value-e251ab34-80da-4d03-b389-db1e6a29fdbcstyle",
+      "type": "default",
+      "source": "63484364-62ed-4f79-a153-cd032a3a57c0",
+      "target": "e251ab34-80da-4d03-b389-db1e6a29fdbc",
+      "sourceHandle": "value",
+      "targetHandle": "style"
+    },
+    {
+      "id": "reactflow__edge-63484364-62ed-4f79-a153-cd032a3a57c0value-e251ab34-80da-4d03-b389-db1e6a29fdbcprompt",
+      "type": "default",
+      "source": "63484364-62ed-4f79-a153-cd032a3a57c0",
+      "target": "e251ab34-80da-4d03-b389-db1e6a29fdbc",
+      "sourceHandle": "value",
+      "targetHandle": "prompt"
+    },
+    {
+      "id": "reactflow__edge-74032837-189b-40fa-83ab-642c51c61c2econditioning-3010e101-a773-483c-8988-8acfb6998b27positive_conditioning",
+      "type": "default",
+      "source": "74032837-189b-40fa-83ab-642c51c61c2e",
+      "target": "3010e101-a773-483c-8988-8acfb6998b27",
+      "sourceHandle": "conditioning",
+      "targetHandle": "positive_conditioning"
+    },
+    {
+      "id": "reactflow__edge-5b5ae377-a738-4a46-a16b-d4c22d5abe69prompt-74032837-189b-40fa-83ab-642c51c61c2estyle",
+      "type": "default",
+      "source": "5b5ae377-a738-4a46-a16b-d4c22d5abe69",
+      "target": "74032837-189b-40fa-83ab-642c51c61c2e",
+      "sourceHandle": "prompt",
+      "targetHandle": "style"
+    },
+    {
+      "id": "reactflow__edge-5b5ae377-a738-4a46-a16b-d4c22d5abe69prompt-74032837-189b-40fa-83ab-642c51c61c2eprompt",
+      "type": "default",
+      "source": "5b5ae377-a738-4a46-a16b-d4c22d5abe69",
+      "target": "74032837-189b-40fa-83ab-642c51c61c2e",
+      "sourceHandle": "prompt",
+      "targetHandle": "prompt"
+    },
+    {
+      "id": "reactflow__edge-acd6c5a5-d28a-4ee9-a46c-545b52fbe6f2clip2-74032837-189b-40fa-83ab-642c51c61c2eclip2",
+      "type": "default",
+      "source": "acd6c5a5-d28a-4ee9-a46c-545b52fbe6f2",
+      "target": "74032837-189b-40fa-83ab-642c51c61c2e",
+      "sourceHandle": "clip2",
+      "targetHandle": "clip2"
+    },
+    {
+      "id": "reactflow__edge-acd6c5a5-d28a-4ee9-a46c-545b52fbe6f2clip-74032837-189b-40fa-83ab-642c51c61c2eclip",
+      "type": "default",
+      "source": "acd6c5a5-d28a-4ee9-a46c-545b52fbe6f2",
+      "target": "74032837-189b-40fa-83ab-642c51c61c2e",
+      "sourceHandle": "clip",
+      "targetHandle": "clip"
+    }
+  ]
+}
