@@ -3,9 +3,9 @@ from invokeai.invocation_api import BaseInvocation, UIComponent, InvocationConte
 from invokeai.invocation_api import BaseInvocationOutput, invocation_output, OutputField
 from invokeai.app.invocations.primitives import ImageField
 from invokeai.backend.util.logging import InvokeAILogger
-from ..interrogator import available_interrogators, interrogate_image
-from ..utils import setup_onnxruntime
-
+from ..tagger.interrogator import interrogate_image
+from ..tagger.model import available_interrogators
+from ..tagger.utils import setup_onnxruntime
 
 
 logger = InvokeAILogger.get_logger(name='InvokeAI-WD14-Tagger')
@@ -36,7 +36,7 @@ class WD14_TAGGER(BaseInvocation):
         description="the image to tagger"
     )
     interrogator: WD14_MODEL_TYPES = InputField( # type: ignore
-        default="wd-swinv2-v3", 
+        default="wd-swinv2-v3",
         description="the model to tagger image"
     )
     threshold: Optional[float] = InputField(
