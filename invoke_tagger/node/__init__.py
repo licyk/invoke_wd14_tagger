@@ -1,18 +1,13 @@
-from typing import Literal, Optional
+from typing import Literal, TypeAlias
 from invokeai.invocation_api import BaseInvocation, UIComponent, InvocationContext, invocation, InputField
 from invokeai.invocation_api import BaseInvocationOutput, invocation_output, OutputField
 from invokeai.app.invocations.primitives import ImageField
-from invokeai.backend.util.logging import InvokeAILogger
 from ..tagger.interrogator import interrogate_image
 from ..tagger.model import available_interrogators
-from ..tagger.utils import setup_onnxruntime
+from ..runtime import logger
 
 
-logger = InvokeAILogger.get_logger(name='InvokeAI-WD14-Tagger')
-logger.info("Loading WD1.4 Tagger Node")
-setup_onnxruntime()
-WD14_MODEL_TYPES = Optional[Literal[tuple(available_interrogators)]]
-
+AvailableModel: TypeAlias = Literal[tuple(available_interrogators)] # type: ignore
 
 
 @invocation_output('wd14_prompt_string_output')
@@ -29,44 +24,44 @@ class WD14PromptOutput(BaseInvocationOutput):
     category="image",
     version="1.0.0",
 )
-class WD14_TAGGER(BaseInvocation):
+class Wd14Tagger(BaseInvocation):
     """tagging images with wd14 models"""
 
     image: ImageField = InputField(
         description="the image to tagger"
     )
-    interrogator: WD14_MODEL_TYPES = InputField( # type: ignore
+    interrogator: AvailableModel = InputField(
         default="wd-swinv2-v3",
         description="the model to tagger image"
     )
-    threshold: Optional[float] = InputField(
+    threshold: float = InputField(
         default=0.35,
         description="threshold"
     )
-    additional_tags: Optional[str] = InputField(
+    additional_tags: str = InputField(
         default="",
         description="enter additional tags split by comma",
         ui_component=UIComponent.Textarea
     )
-    exclude_tags: Optional[str] = InputField(
+    exclude_tags: str = InputField(
         default="",
         description="enter exclude tags split by comma",
         ui_component=UIComponent.Textarea
     )
-    replace_underscore: Optional[Literal["ON", "OFF"]] = InputField(
+    replace_underscore: Literal["ON", "OFF"] = InputField(
         default="ON",
         description="replace underscore to space"
     )
-    replace_underscore_excludes: Optional[str] = InputField(
+    replace_underscore_excludes: str = InputField(
         default="0_0, (o)_(o), +_+, +_-, ._., <o>_<o>, <|>_<|>, =_=, >_<, 3_3, 6_9, >_o, @_@, ^_^, o_o, u_u, x_x, |_|, ||_||",
         description="enter replace tags split by comma",
         ui_component=UIComponent.Textarea
     )
-    escape_tag: Optional[Literal["ON", "OFF"]] = InputField(
+    escape_tag: Literal["ON", "OFF"] = InputField(
         default="ON",
         description="escape brackets of tagger result"
     )
-    unload_model_after_running: Optional[Literal["ON", "OFF"]] = InputField(
+    unload_model_after_running: Literal["ON", "OFF"] = InputField(
         default="ON",
         description="unload model after running Tagger"
     )
@@ -75,21 +70,26 @@ class WD14_TAGGER(BaseInvocation):
     def invoke(self, context: InvocationContext) -> WD14PromptOutput:
         logger.info("Tagging Image")
         image = context.images.get_pil(self.image.image_name)
-        interrogator = available_interrogators[self.interrogator]
-        replace_underscore = True if self.replace_underscore == "ON" else False
-        escape_tag = True if self.escape_tag == "ON" else False
-        unload_model_after_running = True if self.unload_model_after_running == "ON" else False
+        interrogator_name = self.interrogator or "wd-swinv2-v3"
+        interrogator = available_interrogators[interrogator_name]
+        threshold = self.threshold or 0.35
+        additional_tags = self.additional_tags or ""
+        exclude_tags = self.exclude_tags or ""
+        replace_underscore_excludes = self.replace_underscore_excludes or ""
+        replace_underscore = self.replace_underscore == "ON"
+        escape_tag = self.escape_tag == "ON"
+        unload_model_after_running = self.unload_model_after_running == "ON"
 
         prompt = interrogate_image(
             image=image,
             interrogator=interrogator,
-            threshold=self.threshold,
-            additional_tags=self.additional_tags,
-            exclude_tags=self.exclude_tags,
+            threshold=threshold,
+            additional_tags=additional_tags,
+            exclude_tags=exclude_tags,
             sort_by_alphabetical_order=False,
             add_confident_as_weight=False,
             replace_underscore=replace_underscore,
-            replace_underscore_excludes=self.replace_underscore_excludes,
+            replace_underscore_excludes=replace_underscore_excludes,
             escape_tag=escape_tag,
             unload_model_after_running=unload_model_after_running
         )
@@ -100,7 +100,3 @@ class WD14_TAGGER(BaseInvocation):
         print(f"Prompt:\n{plain_tags}")
         print("====================================================================================================\n")
         return WD14PromptOutput(prompt=plain_tags)
-
-
-
-logger.info("Load WD1.4 Tagger Node Done")

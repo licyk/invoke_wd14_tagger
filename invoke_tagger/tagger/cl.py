@@ -1,26 +1,27 @@
 import os
 import json
 import numpy as np
-from typing import Tuple
 from pathlib import Path
 from dataclasses import dataclass
 from huggingface_hub import hf_hub_download
 from PIL import Image
+from numpy.typing import NDArray
+from onnxruntime import InferenceSession
 
 from .interrogator import Interrogator
-
+from ..runtime import logger
 
 @dataclass
 class LabelData:
-    names: list[str]
-    rating: list[np.int64]
-    general: list[np.int64]
-    artist: list[np.int64]
-    character: list[np.int64]
-    copyright: list[np.int64]
-    meta: list[np.int64]
-    quality: list[np.int64]
-    model: list[np.int64]
+    names: list[str | None]
+    rating: NDArray[np.int64]
+    general: NDArray[np.int64]
+    artist: NDArray[np.int64]
+    character: NDArray[np.int64]
+    copyright: NDArray[np.int64]
+    meta: NDArray[np.int64]
+    quality: NDArray[np.int64]
+    model: NDArray[np.int64]
 
 
 def pil_ensure_rgb(image: Image.Image) -> Image.Image:
@@ -68,11 +69,11 @@ def get_tags(probs, labels: LabelData):
                     rating_conf = float(rating_probs[rating_idx_local])
                     result["rating"].append((rating_name, rating_conf))
                 else:
-                    print(f"Warning: Invalid global index {rating_idx_global} for rating tag.")
+                    logger.warning(f"Invalid global index {rating_idx_global} for rating tag.")
             else:
-                print("Warning: rating_probs became empty after filtering.")
+                logger.warning("rating_probs became empty after filtering.")
         else:
-            print("Warning: No valid indices found for rating tags within probs length.")
+            logger.warning("No valid indices found for rating tags within probs length.")
 
     # Quality (select max)
     if len(labels.quality) > 0:
@@ -87,11 +88,11 @@ def get_tags(probs, labels: LabelData):
                     quality_conf = float(quality_probs[quality_idx_local])
                     result["quality"].append((quality_name, quality_conf))
                 else:
-                    print(f"Warning: Invalid global index {quality_idx_global} for quality tag.")
+                    logger.warning(f"Invalid global index {quality_idx_global} for quality tag.")
             else:
-                print("Warning: quality_probs became empty after filtering.")
+                logger.warning("quality_probs became empty after filtering.")
         else:
-            print("Warning: No valid indices found for quality tags within probs length.")
+            logger.warning("No valid indices found for quality tags within probs length.")
 
     # All tags for each category (no threshold)
     category_map = {
@@ -111,7 +112,7 @@ def get_tags(probs, labels: LabelData):
                     if idx_global < len(labels.names) and labels.names[idx_global] is not None:
                         result[category].append((labels.names[idx_global], float(category_probs[idx_local])))
                     else:
-                        print(f"Warning: Invalid global index {idx_global} for {category} tag.")
+                        logger.warning(f"Invalid global index {idx_global} for {category} tag.")
 
     # Sort by probability (descending)
     for k in result:
@@ -132,8 +133,8 @@ class CLTaggerInterrogator(Interrogator):
         self.tag_mapping_path = tag_mapping_path
         self.kwargs = kwargs
 
-    def download(self) -> Tuple[os.PathLike, os.PathLike]:
-        print(f"Loading {self.name} model file from {self.kwargs['repo_id']}")
+    def download(self) -> tuple[os.PathLike, os.PathLike]:
+        logger.info(f"Loading {self.name} model file from {self.kwargs['repo_id']}")
 
         model_path = Path(hf_hub_download(
             **self.kwargs, filename=self.model_path))
@@ -144,14 +145,11 @@ class CLTaggerInterrogator(Interrogator):
     def load(self) -> None:
         model_path, tag_mapping_path = self.download()
 
-        import torch
-        from onnxruntime import InferenceSession
-
         providers = ['CUDAExecutionProvider', 'CPUExecutionProvider']
 
         self.model = InferenceSession(str(model_path), providers=providers)
 
-        print(f'Loaded {self.name} model from {model_path}')
+        logger.info(f'Loaded {self.name} model from {model_path}')
 
         self.tags = self.load_tag_mapping(tag_mapping_path)
 
@@ -174,13 +172,20 @@ class CLTaggerInterrogator(Interrogator):
         else:
             raise ValueError("Unsupported tag mapping format: Expected a dictionary.")
 
-        names = [None] * (max(idx_to_tag.keys()) + 1)
-        rating, general, artist, character, copyright, meta, quality, model_name = [], [], [], [], [], [], [], []
+        names: list[str | None] = [None] * (max(idx_to_tag.keys()) + 1)
+        rating: list[int] = []
+        general: list[int] = []
+        artist: list[int] = []
+        character: list[int] = []
+        copyright: list[int] = []
+        meta: list[int] = []
+        quality: list[int] = []
+        model_name: list[int] = []
         for idx, tag in idx_to_tag.items():
             if idx >= len(names):
                 names.extend([None] * (idx - len(names) + 1))
             names[idx] = tag
-            category = tag_to_category.get(tag, 'Unknown')  # Handle missing category mapping gracefully
+            category = tag_to_category.get(tag, 'Unknown')
             idx_int = int(idx)
             if category == 'Rating':
                 rating.append(idx_int)
@@ -199,14 +204,24 @@ class CLTaggerInterrogator(Interrogator):
             elif category == 'Model':
                 model_name.append(idx_int)
 
-        return LabelData(names=names, rating=np.array(rating, dtype=np.int64), general=np.array(general, dtype=np.int64), artist=np.array(artist, dtype=np.int64),
-                         character=np.array(character, dtype=np.int64), copyright=np.array(copyright, dtype=np.int64), meta=np.array(meta, dtype=np.int64), quality=np.array(quality, dtype=np.int64), model=np.array(model_name, dtype=np.int64)), idx_to_tag, tag_to_category
+        label_data = LabelData(
+            names=names,
+            rating=np.array(rating, dtype=np.int64),
+            general=np.array(general, dtype=np.int64),
+            artist=np.array(artist, dtype=np.int64),
+            character=np.array(character, dtype=np.int64),
+            copyright=np.array(copyright, dtype=np.int64),
+            meta=np.array(meta, dtype=np.int64),
+            quality=np.array(quality, dtype=np.int64),
+            model=np.array(model_name, dtype=np.int64),
+        )
+        return label_data, idx_to_tag, tag_to_category
 
     def preprocess_image(self, image: Image.Image, target_size=(448, 448)):
         # Adapted from onnx_predict.py's version
         image = pil_ensure_rgb(image)
         image = pil_pad_square(image)
-        image_resized = image.resize(target_size, Image.BICUBIC)
+        image_resized = image.resize(target_size, Image.Resampling.BICUBIC)
         img_array = np.array(image_resized, dtype=np.float32) / 255.0
         img_array = img_array.transpose(2, 0, 1)  # HWC -> CHW
         # Assuming model expects RGB based on original code, no BGR conversion here
@@ -219,8 +234,8 @@ class CLTaggerInterrogator(Interrogator):
 
     def interrogate(
             self,
-            image: Image
-    ) -> dict[str, list]:
+            image: Image.Image
+    ) -> tuple[dict[str, float], dict[str, float]]:
 
         # init model
         if not hasattr(self, 'model') or self.model is None:
@@ -229,44 +244,34 @@ class CLTaggerInterrogator(Interrogator):
         input_name = self.model.get_inputs()[0].name
         output_name = self.model.get_outputs()[0].name
 
-        original_pil_image, input_tensor = self.preprocess_image(image)
+        _, input_tensor = self.preprocess_image(image)
         input_tensor = input_tensor.astype(np.float32)
 
-        outputs = self.model.run([output_name], {input_name: input_tensor})[0]
+        raw_outputs = self.model.run([output_name], {input_name: input_tensor})[0]
+        outputs = np.asarray(raw_outputs, dtype=np.float32)
 
         if np.isnan(outputs).any() or np.isinf(outputs).any():
-            print("Warning: NaN or Inf detected in model output. Clamping...")
-            outputs = np.nan_to_num(outputs, nan=0.0, posinf=1.0, neginf=0.0)  # Clamp to 0-1 range
+            logger.warning("NaN or Inf detected in model output. Clamping...")
+            outputs = np.nan_to_num(outputs, nan=0.0, posinf=1.0, neginf=0.0)
 
-        # Apply sigmoid (outputs are likely logits)
-        # Use a stable sigmoid implementation
-        def stable_sigmoid(x):
-            return 1 / (1 + np.exp(-np.clip(x, -30, 30)))  # Clip to avoid overflow
-        probs = stable_sigmoid(outputs[0])  # Assuming batch size 1
+        def stable_sigmoid(x: np.ndarray) -> np.ndarray:
+            return 1 / (1 + np.exp(-np.clip(x, -30, 30)))
 
-        predictions = get_tags(probs, self.tags[0])  # g_labels_data
-        # output_tags = []
-        # if predictions.get("rating"): output_tags.append(predictions["rating"][0][0].replace("_", " "))
-        # if predictions.get("quality"): output_tags.append(predictions["quality"][0][0].replace("_", " "))
-        # # Add other categories, respecting order and filtering meta if needed
-        # for category in ["artist", "character", "copyright", "general", "meta", "model"]:
-        #     tags_in_category = predictions.get(category, [])
-        #     for tag, prob in tags_in_category:
-        #         # Basic meta tag filtering for text output
-        #         if category == "meta" and any(p in tag.lower() for p in ['id', 'commentary', 'request', 'mismatch']):
-        #             continue
-        #         output_tags.append(tag.replace("_", " "))
-        # output_text = ", ".join(output_tags)
+        probs = stable_sigmoid(outputs[0])
+        predictions = get_tags(probs, self.tags[0])
 
-        ratings = dict(predictions.get("rating", []))
-        tags = dict(
-            predictions.get("general", [])
-            + predictions.get("character", [])
-            + predictions.get("copyright", [])
-            + predictions.get("artist", [])
-            + predictions.get("meta", [])
-            + predictions.get("quality", [])
-            + predictions.get("model", [])
-        )
+        ratings = {tag: float(conf) for tag, conf in predictions.get("rating", [])}
+        tags = {
+            tag: float(conf)
+            for tag, conf in (
+                predictions.get("general", [])
+                + predictions.get("character", [])
+                + predictions.get("copyright", [])
+                + predictions.get("artist", [])
+                + predictions.get("meta", [])
+                + predictions.get("quality", [])
+                + predictions.get("model", [])
+            )
+        }
 
         return ratings, tags

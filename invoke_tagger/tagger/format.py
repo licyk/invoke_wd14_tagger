@@ -1,7 +1,7 @@
 import re
 import hashlib
 
-from typing import Dict, Callable, NamedTuple
+from typing import Callable, NamedTuple
 from pathlib import Path
 
 
@@ -27,11 +27,10 @@ pattern = re.compile(r'\[([\w:]+)\]')
 
 # all function must returns string or raise TypeError or ValueError
 # other errors will cause the extension error
-available_formats: Dict[str, Callable] = {
+available_formats: dict[str, Callable] = {
     'name': lambda i: i.path.stem,
     'extension': lambda i: i.path.suffix[1:],
     'hash': hash,
-
     'output_extension': lambda i: i.output_ext
 }
 
